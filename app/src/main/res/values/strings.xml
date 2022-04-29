@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">MyComposeApp</string>
+    <string name="my_name">Venu ram raj kumar</string>
+    <string name="description">Rajkumar is an android developer working in IT industry for 13 years in mobile domain</string>
 </resources>
