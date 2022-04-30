@@ -1,7 +1,10 @@
-package com.raj.mycomposeapp
+package com.raj.mycomposeapp.activity
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
+import android.view.View
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -33,33 +36,106 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.viewinterop.AndroidView
+import com.raj.mycomposeapp.MainContent
+import com.raj.mycomposeapp.R
+import com.raj.mycomposeapp.User
+
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            mainContent()
+            MainContent()
         }
+    }
+
+    //This is navigation without navgation Component
+    @Composable
+    fun DislpayDemoItems() {
+
+        Box(modifier = Modifier.fillMaxSize()) {
+            Column(modifier = Modifier
+                .fillMaxSize()
+                .padding(3.dp)) {
+
+                Button(modifier = Modifier
+                    .padding(5.dp),
+                    onClick = {
+                        setContent { Title() }
+                    }) {
+                    Text(text = "Demo Title ")
+                }
+
+                Button(modifier = Modifier
+                    .padding(5.dp),
+                    onClick = {
+                        setContent { UserCardStatic() }
+                    }) {
+                    Text(text = "Demo StaticList ")
+                }
+
+                Button(modifier = Modifier
+                    .padding(5.dp),
+                    onClick = {
+                        setContent { myContent() }
+                    }) {
+                    Text(text = "Demo Dynamic List ")
+                }
+
+                Button(modifier = Modifier
+                    .padding(5.dp),
+                    onClick = {
+                        setContent { UseXmlInCompose() }
+                    }) {
+                    Text(text = "Demo Use xml in Compose ")
+                }
+
+            }
+
+        }
+
     }
 }
 
-val userList  = mutableStateListOf(User("RAJ","Raj description",android.R.drawable.presence_audio_away),
-    User("VENU","Venu description"),
-    User("RAM","Ram description",android.R.drawable.star_on),
-    User("Kumar","Kumar description",android.R.drawable.presence_audio_online),
-    User("Sahasra","Sahasra description",android.R.drawable.ic_menu_upload_you_tube),
-    User("Mahathi","Mahati description",android.R.drawable.btn_star_big_on))
+
+@Composable
+fun UseXmlInCompose() {
+
+    AndroidView(factory = {
+        View.inflate(it, R.layout.sample_layout, null)
+    },
+        modifier = Modifier.fillMaxSize(),
+        update = {
+            val tv: TextView = it.findViewById<TextView>(R.id.textView)
+            tv.setOnClickListener {
+                tv.text = "It is updated"
+            }
+        })
+
+}
+
+
+val userList =
+    mutableStateListOf(User("RAJ", "Raj description", android.R.drawable.presence_audio_away),
+        User("VENU", "Venu description"),
+        User("RAM", "Ram description", android.R.drawable.star_on),
+        User("Kumar", "Kumar description", android.R.drawable.presence_audio_online),
+        User("Sahasra", "Sahasra description", android.R.drawable.ic_menu_upload_you_tube),
+        User("Mahathi", "Mahati description", android.R.drawable.btn_star_big_on))
 
 
 @Composable
-fun mainContent() {
+fun myContent() {
 
-    val user = User("Neelam","Neelam someth ign lksdjflkasjdlkjflksjdflkjsldjfsd")
-    val usersRemember = remember{ userList}
+    val user = User("Neelam", "Neelam someth ign lksdjflkasjdlkjflksjdflkjsldjfsd")
+    val usersRemember = remember { userList }
 
-    Box (modifier = Modifier.fillMaxSize()) {
+    Box(modifier = Modifier.fillMaxSize()) {
         RecyclerViewList(userList = usersRemember)
-        Button(modifier = Modifier.padding(24.dp).align(Alignment.BottomCenter),
+        Button(modifier = Modifier
+            .padding(24.dp)
+            .align(Alignment.BottomCenter),
             onClick = {
                 usersRemember.add(user)
             }) {
@@ -71,12 +147,10 @@ fun mainContent() {
 
 //RecyclerView
 @Composable
-fun RecyclerViewList(userList : List<User>) {
-
-
-
+fun RecyclerViewList(userList: List<User>) {
     LazyColumn {
-        items(userList){ user ->  UserCardDynamic(user = user)
+        items(userList) { user ->
+            UserCardDynamic(user = user)
         } //Instead of adapter we use items. If it is 1 item then use item
     }
 }
@@ -105,20 +179,22 @@ fun UserCardDynamic(user: User) {
                     .size(120.dp)
                     .clip(CircleShape))
 
-            Column(modifier = Modifier.padding(3.dp,0.dp,0.dp,0.dp)) {
+            Column(modifier = Modifier.padding(3.dp, 0.dp, 0.dp, 0.dp)) {
                 val context = LocalContext.current
                 Text(text = user.name)
                 Text(text = user.description, color = colorResource(id = R.color.purple_500))
-                Button(modifier = Modifier.padding(0.dp,3.dp,0.dp,0.dp), onClick = {
+                Button(modifier = Modifier.padding(0.dp, 3.dp, 0.dp, 0.dp), onClick = {
                     showToast(context, "Profile is Clicked")
+
                 }) {
-                    Text("View Profile ", fontStyle = FontStyle.Italic, fontWeight = FontWeight.Bold)
+                    Text("View Profile ",
+                        fontStyle = FontStyle.Italic,
+                        fontWeight = FontWeight.Bold)
                 }
 
             }
         }
     }
-
 
 
 }
@@ -130,8 +206,7 @@ fun SimpleUserList() {
     Column(
         modifier = Modifier.verticalScroll(rememberScrollState())
     ) {
-        for (i in 1..10)
-        {
+        for (i in 1..10) {
             UserCardStatic()
         }
     }
@@ -164,27 +239,29 @@ fun UserCardStatic() {
                     .clip(CircleShape))
 
 
-            Column(modifier = Modifier.padding(3.dp,0.dp,0.dp,0.dp)) {
+            Column(modifier = Modifier.padding(3.dp, 0.dp, 0.dp, 0.dp)) {
                 val context = LocalContext.current
                 Text(text = stringResource(id = R.string.my_name))
-                Text(text = stringResource(id = R.string.description), color = colorResource(id = R.color.purple_500))
-                Button(modifier = Modifier.padding(0.dp,3.dp,0.dp,0.dp), onClick = {
+                Text(text = stringResource(id = R.string.description),
+                    color = colorResource(id = R.color.purple_500))
+                Button(modifier = Modifier.padding(0.dp, 3.dp, 0.dp, 0.dp), onClick = {
                     showToast(context, "Profile is Clicked")
                 }) {
-                    Text("View Profile ", fontStyle = FontStyle.Italic, fontWeight = FontWeight.Bold)
+                    Text("View Profile ",
+                        fontStyle = FontStyle.Italic,
+                        fontWeight = FontWeight.Bold)
                 }
 
             }
         }
     }
 
-
-
 }
 
 
 fun showToast(context: Context, msg: String) {
     Toast.makeText(context, msg, Toast.LENGTH_LONG).show()
+    context.startActivity(Intent(context, ComposeInExistingCodeActivity::class.java))
 }
 
 @Composable
