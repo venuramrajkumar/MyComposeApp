@@ -43,7 +43,7 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-val userList : List<User> = mutableListOf(User("RAJ","Raj description",android.R.drawable.presence_audio_away),
+val userList  = mutableStateListOf(User("RAJ","Raj description",android.R.drawable.presence_audio_away),
     User("VENU","Venu description"),
     User("RAM","Ram description",android.R.drawable.star_on),
     User("Kumar","Kumar description",android.R.drawable.presence_audio_online),
@@ -55,7 +55,7 @@ val userList : List<User> = mutableListOf(User("RAJ","Raj description",android.R
 fun mainContent() {
 
     val user = User("Neelam","Neelam someth ign lksdjflkasjdlkjflksjdflkjsldjfsd")
-    val usersRemember = remember{ mutableStateListOf(user)}
+    val usersRemember = remember{ userList}
 
     Box (modifier = Modifier.fillMaxSize()) {
         RecyclerViewList(userList = usersRemember)
